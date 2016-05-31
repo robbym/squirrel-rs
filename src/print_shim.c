@@ -47,7 +47,7 @@ void shim_err_fn(void* v, const char* s, ...) {
 	vsnprintf(buf, len, s, args2);
 	va_end(args2);
 	
-	_print_callback(v, len, buf);
+	_err_callback(v, len, buf);
 
 	free(buf);
 }
