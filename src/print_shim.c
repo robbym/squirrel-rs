@@ -21,10 +21,10 @@ void shim_print_fn(void* v, const char* s, ...) {
 	va_copy(args2, args1);
 
 	char* buf = NULL;
-	size_t len = vsnprintf(buf, 0, s, args1);
+	size_t len = vsnprintf(buf, 0, s, args1) + 1;
 	va_end(args1);
 	
-	buf = (char*) malloc(len + 1); // Add one for trailing null
+	buf = (char*) malloc(len); // Add one for trailing null
 	vsnprintf(buf, len, s, args2);
 	va_end(args2);
 	
@@ -40,10 +40,10 @@ void shim_err_fn(void* v, const char* s, ...) {
 	va_copy(args2, args1);
 
 	char* buf = NULL;
-	size_t len = vsnprintf(buf, 0, s, args1);
+	size_t len = vsnprintf(buf, 0, s, args1) + 1;
 	va_end(args1);
 	
-	buf = (char*) malloc(len + 1); // Add one for trailing null
+	buf = (char*) malloc(len); // Add one for trailing null
 	vsnprintf(buf, len, s, args2);
 	va_end(args2);
 	
