@@ -15,34 +15,39 @@ void shim_set_err_callback(callback_t cb) {
 }
 
 void shim_print_fn(void* v, const char* s, ...) {
-	va_list varargs;
-	va_start(varargs, s);
+	va_list args1;
+	va_start(args1, s);
+	va_list args2;
+	va_copy(args2, args1);
 
 	char* buf = NULL;
-	size_t len = vsnprintf(buf, 0, s, varargs);
+	size_t len = vsnprintf(buf, 0, s, args1);
+	va_end(args1);
 	
 	buf = (char*) malloc(len + 1); // Add one for trailing null
-	vsnprintf(buf, len, s, varargs);
+	vsnprintf(buf, len, s, args2);
+	va_end(args2);
 	
 	_print_callback(v, len, buf);
 
 	free(buf);
-	
-	va_end(varargs);
 }
 
 void shim_err_fn(void* v, const char* s, ...) {
-	va_list varargs;
-	va_start(varargs, s);
+	va_list args1;
+	va_start(args1, s);
+	va_list args2;
+	va_copy(args2, args1);
 
 	char* buf = NULL;
-	size_t len = vsnprintf(buf, 0, s, varargs);
-	buf = (char*) malloc(len + 1); // Add one for trailing null
-	vsnprintf(buf, len, s, varargs);
+	size_t len = vsnprintf(buf, 0, s, args1);
+	va_end(args1);
 	
-	_err_callback(v, len, buf);
+	buf = (char*) malloc(len + 1); // Add one for trailing null
+	vsnprintf(buf, len, s, args2);
+	va_end(args2);
+	
+	_print_callback(v, len, buf);
 
 	free(buf);
-	
-	va_end(varargs);
 }
